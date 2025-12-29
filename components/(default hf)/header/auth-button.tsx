@@ -1,3 +1,4 @@
+import { signIn } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import { Github } from "lucide-react";
 
@@ -14,6 +15,21 @@ const item = {
 const buttonClass = "w-8 h-8 scale-[.9] flex items-center justify-center bg-[#00ffbf]/70 text-black rounded-full cursor-pointer hover:bg-[#00ffbf]/50";
 
 export default function AuthButton({active}: {active?: boolean}) {
+
+  const handleGoogleSignIn = async () => {
+    signIn.social({
+      provider: "google",
+      callbackURL: "/"
+    })
+  }
+
+  const handleGithubSignIn = async () => {
+    signIn.social({
+      provider: "github",
+      callbackURL: "/"
+    })
+  }
+
   return (
     <motion.div 
       className="absolute top-full left-0 mt-2 w-full flex justify-center gap-2"
@@ -21,7 +37,8 @@ export default function AuthButton({active}: {active?: boolean}) {
       animate={active ? "visible" : "hidden"}
       variants={container}
     >
-      <motion.button 
+      <motion.button
+        onClick={handleGoogleSignIn} 
         variants={item}
         transition={{ type: "spring", bounce: 0.6, duration: 0.8 }}
         className={`${buttonClass} font-[Helvetica]`}
@@ -30,6 +47,7 @@ export default function AuthButton({active}: {active?: boolean}) {
       </motion.button>
       
       <motion.button 
+        onClick={handleGithubSignIn}
         variants={item}
         transition={{ type: "spring", bounce: 0.6, duration: 0.8 }}
         className={buttonClass}
