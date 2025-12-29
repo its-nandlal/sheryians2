@@ -1,6 +1,6 @@
 
 
-import Header from "@/components/header/header";
+import Header from "@/components/(default hf)/header/header";
 import "../globals.css";
 
 export default function HomeLayout({children,}: Readonly<{

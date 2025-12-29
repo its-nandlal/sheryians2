@@ -39,6 +39,7 @@ export default function Header() {
         </span>
       </div>
 
+
       <div className='w-1/2 flex items-center justify-between'>
         {/* Navigation */}
         <nav className='font-[NeueMachina] text-sm tracking-wide flex items-center gap-8'>
