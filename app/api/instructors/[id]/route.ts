@@ -62,7 +62,7 @@ export async function PATCH(
       headers: await headers(),
     })
 
-    if (!session?.user || (session.user as { role: string }).role !== "OWNER") {
+    if (!session?.user || (session.user as unknown as { role: string }).role !== "OWNER") {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 }
@@ -123,7 +123,7 @@ export async function DELETE(
       headers: await headers(),
     })
 
-    if (!session?.user || (session.user as { role: string }).role !== "OWNER") {
+    if (!session?.user || (session.user as unknown as { role: string }).role !== "OWNER") {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 }

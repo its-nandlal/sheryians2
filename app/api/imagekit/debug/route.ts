@@ -22,7 +22,7 @@ export async function GET() {
       },
       session: {
         authenticated: !!session,
-        role: session ? (session.user as {role: string}).role : null,
+        role: session ? (session.user as unknown as {role: string}).role : null,
       },
     }
 

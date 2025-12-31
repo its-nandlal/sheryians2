@@ -3,6 +3,10 @@ import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import ImageKit from "imagekit"
 
+// Add route segment config
+export const runtime = "nodejs" // Force Node.js runtime
+export const dynamic = "force-dynamic" // Disable static optimization
+
 export async function GET() {
   try {
     // Check authentication
@@ -19,7 +23,7 @@ export async function GET() {
     }
 
     // Check if user is OWNER
-    const userRole = (session.user as { role: string }).role
+    const userRole = (session.user as unknown as { role: string }).role
     if (userRole !== "OWNER") {
       console.error("ImageKit auth: User is not OWNER")
       return NextResponse.json(
@@ -28,11 +32,24 @@ export async function GET() {
       )
     }
 
-    // Create ImageKit instance directly in route
+    // Validate environment variables
+    const publicKey = process.env.IMAGEKIT_PUBLIC_KEY
+    const privateKey = process.env.IMAGEKIT_PRIVATE_KEY
+    const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT
+
+    if (!publicKey || !privateKey || !urlEndpoint) {
+      console.error("Missing ImageKit environment variables")
+      return NextResponse.json(
+        { error: "ImageKit not configured" },
+        { status: 500 }
+      )
+    }
+
+    // Create ImageKit instance
     const imagekit = new ImageKit({
-      publicKey: process.env.IMAGEKIT_PUBLIC_KEY!,
-      privateKey: process.env.IMAGEKIT_PRIVATE_KEY!,
-      urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT!,
+      publicKey,
+      privateKey,
+      urlEndpoint,
     })
 
     // Get auth parameters
