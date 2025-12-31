@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import logo from '@/assets/logo.webp'
-import ButtonPrimary from '../ui/button-primary'
+import ButtonPrimary from '../../ui/button-primary'
 import { PhoneCall } from 'lucide-react'
 import Link from 'next/link'
 import AuthButton from './auth-button'

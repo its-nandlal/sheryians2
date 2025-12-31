@@ -17,6 +17,34 @@ enum UserRole {
   OWNER
 }
 
+
+enum Language {
+  HINGLISH
+  HINDI
+  ENGLISH
+}
+
+enum CourseType {
+  BOOTCAMP
+  COHORT
+  SELF_PACED
+}
+
+enum CourseStatus {
+  UPCOMING
+  LIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum ModuleType {
+  VIDEO
+  QUIZ
+  ASSIGNMENT
+  PROJECT
+  LIVE_SESSION
+}
+
 model User {
   id            String    @id
   name          String
@@ -28,6 +56,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  enrollments   Enrollment[]
 
   @@unique([email])
   @@map("user")
@@ -79,4 +108,122 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+// Course Models
+model Course {
+  id              String       @id @default(cuid())
+  slug            String       @unique
+  title           String
+  subtitle        String?
+  description     String?
+  language        Language     @default(HINGLISH)
+  type            CourseType
+  status          CourseStatus @default(UPCOMING)
+  price           Float
+  discountedPrice Float?
+  thumbnailUrl    String?
+  bannerUrl       String?
+  duration        String?      // "6 months"
+  level           String?      // "Beginner/Advanced"
+  
+  // SEO
+  metaTitle    String?
+  metaDesc     String?
+  keywords     String[]
+  
+  modules      Module[]
+  enrollments  Enrollment[]
+  instructors  InstructorCourse[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("course")
+}
+
+model Module {
+  id           String     @id @default(cuid())
+  title        String
+  description  String?
+  order        Int
+  type         ModuleType
+  duration     String?    // "2:30 hours"
+  videoUrl     String?
+  quizUrl      String?
+  assignmentId String?
+  
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("module")
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  enrolledAt DateTime @default(now())
+  progress   Float    @default(0) // 0-100%
+  completed  Boolean  @default(false)
+  
+  userId   String
+  courseId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, courseId])
+  @@map("enrollment")
+}
+
+model Instructor {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  avatarUrl String?
+  avatarFileId String?  // ImageKit file ID
+  bio       String?
+  expertise String[]
+  
+  courses   InstructorCourse[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("instructor")
+}
+
+model InstructorCourse {
+  instructorId String
+  courseId     String
+  
+  instructor Instructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  course     Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@id([instructorId, courseId])
+  @@map("instructor_course")
+}
+
+
+// Track ImageKit uploads
+model MediaFile {
+  id           String   @id @default(cuid())
+  fileId       String   @unique // ImageKit file ID
+  fileName     String
+  fileType     String   // image, video, document
+  url          String
+  thumbnailUrl String?
+  size         Int      // in bytes
+  width        Int?
+  height       Int?
+  entityType   String   // instructor, course, module
+  entityId     String?  // Related entity ID
+  uploadedBy   String?  // User ID who uploaded
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([entityType, entityId])
+  @@index([uploadedBy])
+  @@map("media_file")
 }
