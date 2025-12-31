@@ -10,7 +10,18 @@ export const env = createEnv({
         GITHUB_CLIENT_SECRET: z.string().min(1, "Github Client Secret is required"),
         GOOGLE_CLIENT_ID: z.string().min(1, "Google Client ID is required"),
         GOOGLE_CLIENT_SECRET: z.string().min(1, "Google Client Secret is required"),
-
+        IMAGEKIT_PUBLIC_KEY: z.string().min(1, "Imagekit Public Key is required"), // Fixed typo: MAGEKIT -> IMAGEKIT
+        IMAGEKIT_PRIVATE_KEY: z.string().min(1, "Imagekit Private Key is required"), // Fixed typo: MAGEKIT -> IMAGEKIT
+        IMAGEKIT_URL_ENDPOINT: z.string().min(1, "Imagekit URL Endpoint is required"),
+        IMAGEKIT_WEBHOOK_SECRET: z.string().min(1, "Imagekit Webhook Secret is required"),
     },
-    experimental__runtimeEnv: process.env
+    client: {
+        NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY: z.string().min(1, "Next Public Imagekit Public Key is required"),
+        NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: z.string().min(1, "Next Public Imagekit URL Endpoint is required"),
+    },
+    // For Next.js >= 13.4.4, you only need to destructure client variables
+    experimental__runtimeEnv: {
+        NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY,
+        NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT,
+    }
 })
