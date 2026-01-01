@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { CreateInstructorInput, createInstructorSchema } from "@/types/instructor";
@@ -19,12 +19,12 @@ export default function CreateInstructor() {
     defaultValues: {
       name: "",
       email: "",
-      bio: "" as string,
+      bio: "",
       expertise: [],
       avatarUrl: null,
-      avatarFileId: null
-    }
-  })
+      avatarFileId: null,
+    },
+  });
 
   const onSubmit = async (data: CreateInstructorInput) => {
     try {
@@ -33,21 +33,20 @@ export default function CreateInstructor() {
         email: data.email,
         bio: data.bio,
         expertise: data.expertise,
-      })
+      });
 
-      if(response.status === 200) {
-        toast.success(`${response.data.message}`)
-        setInstructorId(response.data.data.id)
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        setInstructorId(response.data.data.id);
       } else {
-        toast.error(`${response.data.message}` || "Something went wrong")
+        toast.error(response.data.message || "Something went wrong");
       }
     } catch (err) {
       console.error("Failed to create instructor:", err);
-      toast.error("Failed to create instructor")
+      toast.error("Failed to create instructor");
     }
-  }
+  };
 
-  // Watch avatar URL for preview
   const avatarUrl = form.watch("avatarUrl");
 
   return (
@@ -57,13 +56,13 @@ export default function CreateInstructor() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full h-full grid grid-cols-2"
         >
-          
+          {/* LEFT PREVIEW */}
           <div className="w-full h-screen bg-orange-900 flex items-center justify-center p-8">
             {avatarUrl ? (
               <div className="relative w-full max-w-md aspect-square rounded-lg overflow-hidden shadow-2xl">
-                <Image 
-                  src={avatarUrl} 
-                  alt="Instructor preview" 
+                <Image
+                  src={avatarUrl}
+                  alt="Instructor preview"
                   fill
                   className="object-cover"
                   priority
@@ -76,13 +75,14 @@ export default function CreateInstructor() {
             )}
           </div>
 
+          {/* RIGHT FORM */}
           <div className="w-full h-screen overflow-y-auto p-8 space-y-6">
             <h2 className="text-2xl font-bold mb-6">Create New Instructor</h2>
 
             <FormField
               control={form.control}
               name="name"
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
@@ -100,7 +100,7 @@ export default function CreateInstructor() {
             <FormField
               control={form.control}
               name="email"
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
@@ -118,13 +118,13 @@ export default function CreateInstructor() {
             <FormField
               control={form.control}
               name="bio"
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Enter instructor bio"
-                      className="w-full min-h-25"
+                      className="w-full min-h-24"
                       {...field}
                       value={field.value ?? ""}
                     />
@@ -136,48 +136,65 @@ export default function CreateInstructor() {
             <FormField
               control={form.control}
               name="expertise"
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Expertise</FormLabel>
                   <FormControl>
                     <input
                       type="text"
-                      placeholder="Enter instructor expertise (comma separated)"
+                      placeholder="Enter expertise (comma separated)"
                       className="w-full px-4 py-2 border rounded-md"
                       value={field.value?.join(", ") ?? ""}
-                      onChange={(e) => field.onChange(e.target.value.split(",").map(item => item.trim()))}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value
+                            .split(",")
+                            .map((item) => item.trim())
+                            .filter(Boolean)
+                        )
+                      }
                     />
                   </FormControl>
                 </FormItem>
               )}
             />
 
-            <div className="w-full pt-4">
-              <button 
-                type="submit" 
-                className="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold disabled:bg-gray-400"
+            <div className="pt-4">
+              <button
+                type="submit"
                 disabled={form.formState.isSubmitting || !!instructorId}
+                className="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold disabled:bg-gray-400"
               >
-                {form.formState.isSubmitting ? "Creating..." : instructorId ? "Instructor Created" : "Create Instructor"}
+                {form.formState.isSubmitting
+                  ? "Creating..."
+                  : instructorId
+                  ? "Instructor Created"
+                  : "Create Instructor"}
               </button>
             </div>
 
+            {/* IMAGE UPLOAD */}
             {instructorId && (
               <div className="border-t pt-6 mt-6">
                 <FormField
                   control={form.control}
                   name="avatarUrl"
-                  render={({field}) => {
+                  render={({ field }) => {
                     const avatarFileId = form.getValues("avatarFileId");
+
                     return (
                       <ImageKitUpload
                         label="Instructor Avatar"
-                        value={field.value ? { url: field.value, fileId: avatarFileId || "" } : null}
+                        value={
+                          field.value
+                            ? { url: field.value, fileId: avatarFileId || "" }
+                            : null
+                        }
                         onChange={(data) => {
-                          field.onChange(data?.url || null);
-                          form.setValue("avatarFileId", data?.fileId || null);
+                          field.onChange(data?.url ?? null);
+                          form.setValue("avatarFileId", data?.fileId ?? null);
                         }}
-                        folder="/instructors"
+                        folder="instructors"
                         instructorId={instructorId}
                       />
                     );
@@ -186,9 +203,8 @@ export default function CreateInstructor() {
               </div>
             )}
           </div>
-
         </form>
       </Form>
     </div>
-  )
+  );
 }
