@@ -1,257 +1,194 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { useCreateInstructor } from "@/hooks/use-instructors"
-import { CreateInstructorInput } from "@/types/instructor"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import ImageKitUpload from "@/components/layout/imagekit-upload"
-import { Loader2, Plus, X } from "lucide-react"
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { CreateInstructorInput, createInstructorSchema } from "@/types/instructor";
+import axios from "axios";
+import { useForm, type Resolver } from "react-hook-form";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Textarea } from "@/components/ui/textarea";
+import ImageKitUpload from "@/components/layout/ImageKitUpload";
+import { useState } from "react";
+import Image from "next/image";
 
-export default function CreateInstructorPage() {
-  const router = useRouter()
-  const createInstructor = useCreateInstructor()
+export default function CreateInstructor() {
+  const [instructorId, setInstructorId] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<CreateInstructorInput>({
-    name: "",
-    email: "",
-    avatarUrl: null,
-    bio: null,
-    expertise: [],
+  const form = useForm<CreateInstructorInput>({
+    resolver: zodResolver(createInstructorSchema) as Resolver<CreateInstructorInput>,
+    defaultValues: {
+      name: "",
+      email: "",
+      bio: "" as string,
+      expertise: [],
+      avatarUrl: null,
+      avatarFileId: null
+    }
   })
 
-  const [expertiseInput, setExpertiseInput] = useState("")
-  const [errors, setErrors] = useState<Record<string, string>>({})
-
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {}
-
-    if (formData.name.length < 2) {
-      newErrors.name = "Name must be at least 2 characters"
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email address"
-    }
-
-    if (formData.bio && formData.bio.length < 10) {
-      newErrors.bio = "Bio must be at least 10 characters"
-    }
-
-    if (formData.expertise.length === 0) {
-      newErrors.expertise = "Add at least one expertise"
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const addExpertise = () => {
-    const trimmed = expertiseInput.trim()
-    if (trimmed && !formData.expertise.includes(trimmed)) {
-      setFormData({
-        ...formData,
-        expertise: [...formData.expertise, trimmed],
-      })
-      setExpertiseInput("")
-      setErrors({ ...errors, expertise: "" })
-    }
-  }
-
-  const removeExpertise = (index: number) => {
-    setFormData({
-      ...formData,
-      expertise: formData.expertise.filter((_, i) => i !== index),
-    })
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!validateForm()) {
-      return
-    }
-
+  const onSubmit = async (data: CreateInstructorInput) => {
     try {
-      await createInstructor.mutateAsync(formData)
-      router.push("/owner/instructors")
-    } catch (error) {
-      if(error instanceof Error){
-            console.log(error.message)
-            return
-        }
-        console.error("An unknown error occurred.")
-      // Error handled in mutation
+      const response = await axios.post("/api/instructor/create", {
+        name: data.name,
+        email: data.email,
+        bio: data.bio,
+        expertise: data.expertise,
+      })
+
+      if(response.status === 200) {
+        toast.success(`${response.data.message}`)
+        setInstructorId(response.data.data.id)
+      } else {
+        toast.error(`${response.data.message}` || "Something went wrong")
+      }
+    } catch (err) {
+      console.error("Failed to create instructor:", err);
+      toast.error("Failed to create instructor")
     }
   }
+
+  // Watch avatar URL for preview
+  const avatarUrl = form.watch("avatarUrl");
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-3xl mx-auto px-4">
-        <div className="bg-white rounded-xl shadow-sm p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Create New Instructor
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Add a new instructor to your platform
-          </p>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Avatar Upload */}
-            <div>
-              <ImageKitUpload
-                label="Profile Picture"
-                folder="/instructors/avatars"
-                currentImage={formData.avatarUrl}
-                onSuccess={(url) =>
-                  setFormData({ ...formData, avatarUrl: url })
-                }
-                onRemove={() => setFormData({ ...formData, avatarUrl: null })}
-              />
-            </div>
-
-            {/* Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name *
-              </label>
-              <Input
-                value={formData.name}
-                onChange={(e) => {
-                  setFormData({ ...formData, name: e.target.value })
-                  setErrors({ ...errors, name: "" })
-                }}
-                placeholder="John Doe"
-                className={errors.name ? "border-red-500" : ""}
-              />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-              )}
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address *
-              </label>
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={(e) => {
-                  setFormData({ ...formData, email: e.target.value })
-                  setErrors({ ...errors, email: "" })
-                }}
-                placeholder="john@example.com"
-                className={errors.email ? "border-red-500" : ""}
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Bio */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Bio
-              </label>
-              <Textarea
-                value={formData.bio || ""}
-                onChange={(e) => {
-                  setFormData({ ...formData, bio: e.target.value })
-                  setErrors({ ...errors, bio: "" })
-                }}
-                placeholder="Tell us about the instructor..."
-                rows={4}
-                className={errors.bio ? "border-red-500" : ""}
-              />
-              {errors.bio && (
-                <p className="mt-1 text-sm text-red-600">{errors.bio}</p>
-              )}
-            </div>
-
-            {/* Expertise */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Expertise *
-              </label>
-              <div className="flex gap-2 mb-3">
-                <Input
-                  value={expertiseInput}
-                  onChange={(e) => setExpertiseInput(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault()
-                      addExpertise()
-                    }
-                  }}
-                  placeholder="e.g., React, Node.js, TypeScript"
-                  className="flex-1"
+    <div className="w-full max-h-screen h-full">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full h-full grid grid-cols-2"
+        >
+          
+          <div className="w-full h-screen bg-orange-900 flex items-center justify-center p-8">
+            {avatarUrl ? (
+              <div className="relative w-full max-w-md aspect-square rounded-lg overflow-hidden shadow-2xl">
+                <Image 
+                  src={avatarUrl} 
+                  alt="Instructor preview" 
+                  fill
+                  className="object-cover"
+                  priority
                 />
-                <Button
-                  type="button"
-                  onClick={addExpertise}
-                  variant="outline"
-                  disabled={!expertiseInput.trim()}
-                >
-                  <Plus className="w-4 h-4 mr-1" />
-                  Add
-                </Button>
               </div>
-
-              {/* Expertise Tags */}
-              <div className="flex flex-wrap gap-2">
-                {formData.expertise.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                  >
-                    {skill}
-                    <button
-                      type="button"
-                      onClick={() => removeExpertise(index)}
-                      className="hover:text-blue-900"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                ))}
+            ) : (
+              <div className="text-white text-center">
+                <p className="text-xl">Upload image to see preview</p>
               </div>
+            )}
+          </div>
 
-              {errors.expertise && (
-                <p className="mt-2 text-sm text-red-600">{errors.expertise}</p>
+          <div className="w-full h-screen overflow-y-auto p-8 space-y-6">
+            <h2 className="text-2xl font-bold mb-6">Create New Instructor</h2>
+
+            <FormField
+              control={form.control}
+              name="name"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <input
+                      type="text"
+                      placeholder="Enter instructor name"
+                      className="w-full px-4 py-2 border rounded-md"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
               )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <input
+                      type="email"
+                      placeholder="Enter instructor email"
+                      className="w-full px-4 py-2 border rounded-md"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Bio</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Enter instructor bio"
+                      className="w-full min-h-25"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="expertise"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Expertise</FormLabel>
+                  <FormControl>
+                    <input
+                      type="text"
+                      placeholder="Enter instructor expertise (comma separated)"
+                      className="w-full px-4 py-2 border rounded-md"
+                      value={field.value?.join(", ") ?? ""}
+                      onChange={(e) => field.onChange(e.target.value.split(",").map(item => item.trim()))}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <div className="w-full pt-4">
+              <button 
+                type="submit" 
+                className="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold disabled:bg-gray-400"
+                disabled={form.formState.isSubmitting || !!instructorId}
+              >
+                {form.formState.isSubmitting ? "Creating..." : instructorId ? "Instructor Created" : "Create Instructor"}
+              </button>
             </div>
 
-            {/* Submit Buttons */}
-            <div className="flex gap-4 pt-6 border-t">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={createInstructor.isPending}
-                className="flex-1"
-              >
-                {createInstructor.isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating...
-                  </>
-                ) : (
-                  "Create Instructor"
-                )}
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
+            {instructorId && (
+              <div className="border-t pt-6 mt-6">
+                <FormField
+                  control={form.control}
+                  name="avatarUrl"
+                  render={({field}) => {
+                    const avatarFileId = form.getValues("avatarFileId");
+                    return (
+                      <ImageKitUpload
+                        label="Instructor Avatar"
+                        value={field.value ? { url: field.value, fileId: avatarFileId || "" } : null}
+                        onChange={(data) => {
+                          field.onChange(data?.url || null);
+                          form.setValue("avatarFileId", data?.fileId || null);
+                        }}
+                        folder="/instructors"
+                        instructorId={instructorId}
+                      />
+                    );
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+        </form>
+      </Form>
     </div>
   )
 }
