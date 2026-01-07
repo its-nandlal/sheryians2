@@ -8,6 +8,8 @@ const buttonPrimaryVariants = cva(
     variants: {
       variant: {
         default: 'bg-[#28dcb2e3] text-black border-[#00dba8a5] shadow-inner shadow-[#00ffc3db] backdrop-blur-md hover:bg-[#f6f6f6] hover:shadow-[#ffffff] hover:border-black',
+        destructive: 'bg-red-700/20 text-zinc-300 border-zinc-200/20 shadow-inner shadow-[#00ffc3db] backdrop-blur-md hover:bg-red-700/70 hover:text-white',
+        secondary: 'bg-[#00835e]/20 text-zinc-100 border-zinc-200/20 shadow-inner shadow-[#00ffc3db] backdrop-blur-md hover:bg-[#00382c] hover:bg-[#00835e]/70 hover:text-white  transition-all duration-200',
         outline: 'bg-transparent text-white border-zinc-200/20 shadow-inner shadow-[#00ffc3db] backdrop-blur-md hover:bg-[#00382c] hover:text-white',
         dark: 'bg-black text-white border-black hover:bg-[#1a1a1a]',
         ghost: 'bg-transparent text-black border-transparent hover:bg-gray-100',

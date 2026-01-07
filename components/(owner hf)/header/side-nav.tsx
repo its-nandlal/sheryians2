@@ -23,7 +23,7 @@ const bottomNavItems: {icon: LucideIcon; label: string; href: string}[] = [
 
 export default function SideNav() {
   return (
-    <nav className='max-w-20 w-full h-screen flex flex-col items-center justify-between py-5
+    <nav className='max-w-20 z-50 w-full h-screen flex flex-col items-center justify-between py-5
      bg-[#0a372a]/50 backdrop-blur-md rounded-r-4xl
      border-r border-zinc-400/20 inset-shadow-sm inset-shadow-[#003d2b]'>
       
@@ -31,13 +31,18 @@ export default function SideNav() {
         <Image src={logo} alt="Logo" width={35} height={35}/>
       </div>
 
-      <div className='w-full flex flex-col items-center gap-8 py-8 bg-[#00ffb710] backdrop-blur-md rounded-4xl border-2 border-[#002519]/20 shadow-inner shadow-[#002519]/50'>
+      {/* bg-[#00ffb710] backdrop-blur-md  */}
+      <div className='w-full flex flex-col items-center gap-8 py-8
+      bg-linear-to-tr from-[#001b12e1] to-[#004934d7] backdrop-blur-md
+       rounded-4xl border-2 border-[#002519]/20 shadow-inner shadow-[#002519]/50'>
         {mainNavItems.map(({icon, label, href}) => (
           <NavButton key={label} icon={icon} label={label} href={href} />
         ))}
       </div>
 
-      <div className='w-full flex flex-col items-center gap-8 py-5 bg-[#00ffb710] backdrop-blur-md rounded-4xl border-2 border-[#002519]/20 shadow-inner shadow-[#002519]/50'>
+      <div className='w-full flex flex-col items-center gap-8 py-5
+       bg-linear-to-tr from-[#001b12e1] to-[#004934d7] backdrop-blur-md
+       rounded-4xl border-2 border-[#002519]/20 shadow-inner shadow-[#002519]/50'>
         {bottomNavItems.map(({icon, label, href}) => (
           <NavButton key={label} icon={icon} label={label} href={href} />
         ))}
@@ -54,19 +59,29 @@ function NavButton({icon: Icon, label, href}: {icon: LucideIcon; label: string; 
     <Link href={href}>
       <ToolTip label={label}>
         <motion.div
-        className={`w-fit h-fit bg-[#00815c]/20 backdrop-blur-xs border border-[#00ffb710] shadow-inner p-4 rounded-full origin-center group
-          ${isActive ? 'shadow-[#00ffb710]/70 scale-[1] opacity-90' : 'shadow-[#002e21]/50 opacity-85 scale-[.9]'}`}
+        className={`w-fit h-fit bg-[#005b41fe]/70 backdrop-blur-xs border border-[#00ffb710] shadow-inner p-4 rounded-full origin-center group
+          ${isActive ? 'shadow-[#00ffb710]/70 scale-[1] opacity-95' : 'shadow-[#002e21]/50 opacity-45 scale-[.8]'}`}
+
+          initial={{
+            opacity: 0.5,
+            scale: 0.8
+          }}
+
+          animate={{
+            opacity: 0.95,
+            scale: 1
+          }}
         whileHover={{
           scale: 1,
-          opacity: 0.85,
+          opacity: 0.95,
         }}
         whileTap={{
-          scale: 1,
-          opacity: 0.85,
+          scale: 1.1,
+          opacity: 0.95,
         }}
         transition={{ duration: 0.5, ease: "backInOut" }}
       >
-        <Icon className={`w-5 h-5 ease-in-out duration-300 ${isActive ? 'opacity-95' : 'opacity-75 group-hover:opacity-95'}`} />
+        <Icon className={`w-5 h-5 ease-in-out duration-300 ${isActive ? 'opacity-95' : 'opacity-65 group-hover:opacity-95'}`} />
         </motion.div>
       </ToolTip>
     </Link>

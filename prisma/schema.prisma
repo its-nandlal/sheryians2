@@ -122,15 +122,19 @@ model Course {
   status          CourseStatus @default(UPCOMING)
   price           Float
   discountedPrice Float?
+  introVideoUrl   String?
+  introVideoFileId String?
   thumbnailUrl    String?
+  thumbnailFileId String?
   bannerUrl       String?
+  bannerFileId    String?
   duration        String?      // "6 months"
   level           String?      // "Beginner/Advanced"
   
   // SEO
   metaTitle    String?
   metaDesc     String?
-  keywords     String[]
+  metaKeywords String[]
   
   modules      Module[]
   enrollments  Enrollment[]
@@ -150,17 +154,40 @@ model Module {
   type         ModuleType
   duration     String?    // "2:30 hours"
   videoUrl     String?
-  quizUrl      String?
-  assignmentId String?
+  // quizUrl      String?
+  // assignmentId String?
   
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  chapter  Chapter[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("module")
 }
+
+
+model Chapter {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  order       Int
+
+  videoUrl    String?
+  videoFileId String?
+  duration    String?
+  isFree      Boolean  @default(false)
+
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("chapter")
+}
+
 
 model Enrollment {
   id         String   @id @default(cuid())

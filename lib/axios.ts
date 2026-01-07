@@ -1,14 +1,14 @@
 import axios from "axios"
 
-export const apiClient = axios.create({
+export const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
     headers: {
-        "Content-Type": "application/json",
-    },
+        'Content-Type': 'multipart/form-data',
+    }
 })
 
 
-apiClient.interceptors.request.use(
+api.interceptors.request.use(
     (config) => {
         return config
     },
@@ -17,7 +17,7 @@ apiClient.interceptors.request.use(
     }
 )
 
-apiClient.interceptors.response.use(
+api.interceptors.response.use(
     (response) => response,
     (error) => {
         if(error.response?.status === 401) {

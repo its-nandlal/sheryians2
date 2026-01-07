@@ -1,19 +1,7 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/lib/providers/query-provider";
 import { Toaster } from "sonner";
-import ImageKitProvider from "@/lib/providers/ImageKitProvider";
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
 
 export const metadata: Metadata = {
   title: "Sheryians Coding School",
@@ -28,14 +16,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={``}
-      >
+      <body className={``}>
         <QueryProvider>
-          <ImageKitProvider>
           {children}
-          </ImageKitProvider>
-          <Toaster />
+<Toaster 
+  position="top-center"
+  toastOptions={{
+    style: {
+      background: 'linear-gradient(to top right, #003023ad, #007655b1)',
+      border: '1px solid #006f55a5',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      borderRadius: '9999px',
+      width: 'fit-contemt'
+    },
+    className: 'mt-4 w-fit! px-6! py-2.5! !text-emerald-400 left-1/2! -translate-x-1/2! text-nowrap! shadow-inner! shadow-[#009774]/60!',
+  }}
+/>
+
+
+
         </QueryProvider>
       </body>
     </html>
