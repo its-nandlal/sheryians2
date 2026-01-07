@@ -47,12 +47,13 @@ export default function ToolTip({
         role="tooltip"
         style={{ transitionDelay: `${delay}ms` }}
         className={`
-          absolute z-50 ${positionClasses[position]}
+          absolute z-99 ${positionClasses[position]}
           px-4 py-1.5 rounded-full
-          bg-[#00ffb3]/20 backdrop-blur-md
+          bg-[#007c57]/80 backdrop-blur-md
           border border-[#00ffb3]/5 
           shadow-inner shadow-[#00ffb3]/15
-          font-[NeueMachina] font-light text-sm tracking-wider
+          text-shadow-2xs text-shadow-zinc-900
+          font-[NeueMachina] font-semibold text-sm tracking-wider
           opacity-0 scale-75 pointer-events-none whitespace-nowrap
           group-hover:opacity-100 
           transition-all duration-200 ease-out

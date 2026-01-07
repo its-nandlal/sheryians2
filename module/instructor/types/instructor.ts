@@ -3,9 +3,7 @@ import { z } from "zod"
 export const createInstructorSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  avatarUrl: z.string().url("Invalid avatar URL").optional().nullable(),
-  avatarFileId: z.string().optional().nullable(),
-  bio: z.string().min(10, "Bio must be at least 10 characters").optional().nullable(),
+  bio: z.string().optional().nullable(),
   expertise: z.array(z.string()).min(1, "At least one expertise required"),
 })
 
