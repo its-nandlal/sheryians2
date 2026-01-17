@@ -138,7 +138,28 @@ export const checkAuthOwner = async (): Promise<AuthUserResponse> => {
         success: false,
         error: "Unauthorized",
         status: 401,
-      };
+    };
+
+    const owner = await prisma.user.findUnique({
+      where: {id: session.user.id},
+      select: {
+        id: true,
+        role: true
+      }
+    })
+
+    if(!owner) return {
+      success: false,
+      error: "Unauthorized",
+      status: 401,
+    }
+
+    if(owner.role !== "OWNER") return {
+      success: false,
+      error: "Unauthorized",
+      status: 401,
+    }
+
 
     return {
       success: true,

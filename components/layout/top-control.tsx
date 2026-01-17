@@ -1,6 +1,10 @@
+"use client"
+
 import { PackagePlus, Plus, ScanEye } from "lucide-react";
 import Link from "next/link";
 import { Input } from "../ui/input";
+import { usePaginationStore } from "@/store/use-pagination-store";
+
 
 interface TopControlProps {
   createRoute: string;
@@ -9,10 +13,13 @@ interface TopControlProps {
   secoundCreateText: string;
   viewRoute: string;
   viewText: string;
-  setSearch: (search: string) => void;
 }
 
-export default function TopControl({ createRoute, createText, secoundCreateRoute, secoundCreateText, viewRoute, viewText, setSearch }: TopControlProps) {
+export default function TopControl({ createRoute, createText, secoundCreateRoute, secoundCreateText, viewRoute, viewText }: TopControlProps) {
+
+  const {setSearch} = usePaginationStore()
+  
+
   return (
     <>
       <div className="w-full h-full p-2 grid grid-cols-6 gap-2 bg-linear-to-tr from-[#001b12e1] to-[#004934d7] backdrop-blur-md border border-[#000000] shadow-inner shadow-[#00835e]/50 rounded-4xl">

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import InstructorFormDialog from '@/module/instructor/components/ui/InstructorFormDialog'
+import InstructorFormDialog from '@/module/instructor/components/InstructorFormDialog'
 
 export default function InstructorCreatePopup() {
 

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useInstructorsStore } from "@/module/instructor/store/instructors-store";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { usePaginationStore } from "@/store/use-pagination-store";
 
 interface PaginationProps {
   total: number;
@@ -13,7 +13,7 @@ export default function Pagination({
   pages,
   currentPage,
 }: PaginationProps) {
-  const { setPage } = useInstructorsStore();
+  const { setPage } = usePaginationStore();
 
   const handlePaginationNumber = (page: number) => {
     if (page < 1) return;
@@ -29,7 +29,7 @@ export default function Pagination({
   return (
     <div
       className="
-        w-full h-16 px-6
+        w-full h-16 p-2 px-6
         font-[Helvetica] text-sm text-zinc-200
         bg-linear-to-br from-emerald-950/70 via-[#002a1e]/80 to-black/80
         backdrop-blur-xl

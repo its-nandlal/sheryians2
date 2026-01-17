@@ -45,6 +45,30 @@ enum ModuleType {
   LIVE_SESSION
 }
 
+enum CourseDuration {
+  ONE_MONTH       // 40-60 hours (1 month part-time)
+  THREE_MONTHS    // 120-180 hours (3 months part-time)
+  SIX_MONTHS      // 240-360 hours (6 months part-time)
+  NINE_MONTHS     // 360-540 hours (9 months part-time)
+  ONE_YEAR        // 480-720 hours (12 months part-time)
+}
+
+enum CourseLevel {
+  BEGINNER        // A1/A2 - No prior knowledge
+  ELEMENTARY      // Basic understanding
+  INTERMEDIATE    // B1 - Some practical experience
+  ADVANCED        // B2/C1 - Strong practical skills
+  EXPERT          // C2 - Professional mastery
+}
+
+
+enum CourseDays {
+  MON_FRI
+  MON_SAT
+  WEEKENDS
+}
+
+
 model User {
   id            String    @id
   name          String
@@ -123,13 +147,16 @@ model Course {
   price           Float
   discountedPrice Float?
   introVideoUrl   String?
-  introVideoFileId String?
+  // introVideoFileId String?
   thumbnailUrl    String?
   thumbnailFileId String?
   bannerUrl       String?
   bannerFileId    String?
-  duration        String?      // "6 months"
-  level           String?      // "Beginner/Advanced"
+  tags            String[]
+  startTime       String
+  days            CourseDays?
+  duration        CourseDuration     // "6 months"
+  level           CourseLevel      // "Beginner/Advanced"
   
   // SEO
   metaTitle    String?
