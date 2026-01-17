@@ -1,4 +1,4 @@
-import { CourseStatus, CourseType, Language, ModuleType } from "@prisma/client"
+import { CourseDays, CourseDuration, CourseLevel, CourseStatus, CourseType, Language, ModuleType } from "@prisma/client"
 import { z } from "zod"
 
 export const createCourseSchema = z.object({
@@ -14,13 +14,11 @@ export const createCourseSchema = z.object({
         .trim(),
     
     subtitle: z.string()
-        .min(6, "Subtitle must be at least 6 characters")
         .max(200, "Subtitle must not exceed 200 characters")
         .trim()
         .optional(),
     
     description: z.string()
-        .min(10, "Description must be at least 10 characters")
         .max(5000, "Description must not exceed 5000 characters")
         .trim()
         .optional(),
@@ -37,9 +35,8 @@ export const createCourseSchema = z.object({
         .max(999999, "Price is too high"),
     
     discountedPrice: z.number()
-        .positive("Discounted price must be positive")
-        .min(0, "Discounted price cannot be negative")
-        .max(999999, "Discounted price is too high")
+        .min(0, "Discounted Price cannot be negative")
+        .max(999999, "Price is too high")
         .optional(),
     
     introVideoUrl: z.string()
@@ -47,40 +44,31 @@ export const createCourseSchema = z.object({
         .trim()
         .optional()
         .or(z.literal("")),
+
+    tags: z.array(
+        z.string()
+            .min(2, "Each tags must be at least 2 characters")
+            .trim()
+    )
+        .min(3, "At least 3 tags required")
+        .max(10, "Maximum 10 tags allowed"),
+
+    days: z.nativeEnum(CourseDays).optional(),
+    startTime: z.string()
+        .min(5, "Start time must be at least 5 characters")
+        .max(10, "Start time is too long")
+        .trim(),
     
-    thumbnailUrl: z.string()
-        .url("Invalid thumbnail URL")
-        .trim()
-        .optional()
-        .or(z.literal("")),
-    
-    bannerUrl: z.string()
-        .url("Invalid banner URL")
-        .trim()
-        .optional()
-        .or(z.literal("")),
-    
-    duration: z.string()
-        .min(2, "Duration must be at least 2 characters")
-        .max(50, "Duration is too long")
-        .trim()
-        .optional(),
-    
-    level: z.string()
-        .min(3, "Level must be at least 3 characters")
-        .max(50, "Level must not exceed 50 characters")
-        .trim()
-        .optional(),
+    duration: z.nativeEnum(CourseDuration),
+    level: z.nativeEnum(CourseLevel),
 
     // SEO fields
     metaTitle: z.string()
-        .min(10, "Meta title must be at least 10 characters")
         .max(60, "Meta title should not exceed 60 characters for SEO")
         .trim()
         .optional(),
     
     metaDesc: z.string()
-        .min(50, "Meta description must be at least 50 characters")
         .max(160, "Meta description should not exceed 160 characters for SEO")
         .trim()
         .optional(),
@@ -92,7 +80,6 @@ export const createCourseSchema = z.object({
     )
         .min(3, "At least 3 keywords required")
         .max(10, "Maximum 10 keywords allowed")
-        .optional()
 })
 .refine((data) => {
     // Ensure discounted price is less than regular price

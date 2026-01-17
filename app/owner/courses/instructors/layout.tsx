@@ -1,8 +1,4 @@
 
-
-
-
-
 interface InstructorLayoutProps {
     children: React.ReactNode;
     create: React.ReactNode;

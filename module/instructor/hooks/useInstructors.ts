@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 // Params Instructors
 
-interface GetInstructorsParams {
+export interface PaginationParams {
     page:       number;
     limit:      number;
     search?:    string
@@ -37,16 +37,16 @@ interface InstructorResponse {
 
 
 
-// ===============  API Fetchinh  ===================
+// ===============  API FEATCHING  ===================
 
 async function fetchGetInstructors (
     {page, limit, search}
-    : GetInstructorsParams): Promise<GetInstructorResponse> {
+    : PaginationParams): Promise<GetInstructorResponse> {
     const { data } = await api.get('/instructors', {
         params: {
             page,
             limit,
-            search: search,
+            search,
         }
     })
 
@@ -78,7 +78,7 @@ async function fetchDeleteInstructor(id: string): Promise<InstructorResponse> {
 // ===============  Create Qurey  ===================
 
 // GET Instructors
-export function useInstructors({page = 1, limit = 9, search = ''}: GetInstructorsParams){
+export function useInstructors({page = 1, limit = 9, search = ''}: PaginationParams){
     return useQuery({
         queryKey: ['instructors', page, limit, search],
         queryFn: () => fetchGetInstructors({page, limit, search}),

@@ -11,17 +11,12 @@ import { Button } from "@/components/ui/button";
 import AlertMessage from "@/components/layout/alert-dialog";
 import { useDeleteInstructor } from "../hooks/useInstructors";
 
-
-
 // import InstructorFormDialog from "./ui/InstructorFormDialog";
 
-const InstructorFormDialog = dynamic(
-  () => import("./ui/InstructorFormDialog"),
-  {
-    ssr: true,
-    loading: () => null
-  }
-)
+const InstructorFormDialog = dynamic(() => import("./InstructorFormDialog"), {
+  ssr: true,
+  loading: () => null,
+});
 
 interface InstructorCardProps {
   instructor?: Instructor;
@@ -29,15 +24,14 @@ interface InstructorCardProps {
 }
 
 function InstructorCard({ instructor, className }: InstructorCardProps) {
-  
-  const {mutate: deleteInstructor} = useDeleteInstructor()
+  const { mutate: deleteInstructor } = useDeleteInstructor();
 
   const handleDelete = (id: string) => {
-    deleteInstructor(id)
-  }
-  
+    deleteInstructor(id);
+  };
+
   return (
-    <div
+    <article
       className={cn(
         "relative group w-full h-full p-4 rounded-2xl bg-linear-to-br from-emerald-950/70 via-[#002a1e]/80 to-black/80 backdrop-blur-xl border border-emerald-800/40 shadow-inner shadow-emerald-500/10 text-zinc-100 grid grid-rows-[auto_1fr] gap-4 hover:scale-[1.02] ease-initial duration-500 cursor-pointer overflow-hidden",
         className
@@ -106,48 +100,49 @@ function InstructorCard({ instructor, className }: InstructorCardProps) {
 
               opacity-0 scale-70
               group-hover:opacity-100 group-hover:scale-85
-              transition-all duration-300 ease-out">
+              transition-all duration-300 ease-out"
+          >
             {/* Edit */}
 
             <InstructorFormDialog mode="edit" defaultValues={instructor}>
-
-            <Button
-              variant="ghost"
-              className="
+              <Button
+                variant="ghost"
+                className="
                 p-1
                 rounded-full
                 bg-emerald-900/60
                 hover:bg-emerald-600
                 hover:text-black
-                transition">
-              <UserRoundPen className="w-3 h-3" />
-            </Button>
-
+                transition"
+              >
+                <UserRoundPen className="w-3 h-3" />
+              </Button>
             </InstructorFormDialog>
 
             <AlertMessage
-            onConfirm={()=> handleDelete(instructor.id)}
-            onConfirmText="Delete">
-            {/* Delete */}
-            <Button
-              variant="ghost"
-              className="
+              title="Delete this course?"
+              description="This action cannot be undone. This will permanently delete the course and all its associated data."
+              onConfirm={() => handleDelete(instructor.id)}
+              onConfirmText="Delete"
+            >
+              {/* Delete */}
+              <Button
+                variant="ghost"
+                className="
                 p-1
                 rounded-full
                 bg-red-900/30
                 hover:bg-red-600
                 hover:text-white
-                transition">
-              <Trash2 className="w-3 h-3" />
-            </Button>
+                transition"
+              >
+                <Trash2 className="w-3 h-3" />
+              </Button>
             </AlertMessage>
-
           </div>
-
-
         </>
       )}
-    </div>
+    </article>
   );
 }
 
