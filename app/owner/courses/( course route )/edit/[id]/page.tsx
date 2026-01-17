@@ -1,7 +1,7 @@
 "use client"
 
 import { Message } from "@/components/layout/message-box"
-import CourseForm from "@/module/course/components/course-form"
+import CourseForm from "@/module/course/( course )/components/course-form"
 import { useCourse } from "@/module/course/( course )/hooks/useCourses"
 import { Course } from "@prisma/client"
 import { CirclePlus, Loader2 } from "lucide-react"
