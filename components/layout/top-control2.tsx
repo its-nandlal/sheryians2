@@ -1,7 +1,10 @@
+"use client"
+
 import ButtonPrimary from '../ui/button-primary'
 import { ArrowLeftCircle, PlusCircle } from 'lucide-react'
 import Link from 'next/link';
 import SearchInput from '../ui/searchInput';
+import { useFormTypeStore } from '@/store';
 
 
 interface TopControlProps {
@@ -13,7 +16,9 @@ interface TopControlProps {
 
 export default function TopControl2({backRoute, backText, createRoute, createText}: TopControlProps) {
 
+  const {setType} = useFormTypeStore()
 
+  const handleCreate = () => setType("create")
 
   return (
       <div className="
@@ -42,6 +47,7 @@ export default function TopControl2({backRoute, backText, createRoute, createTex
 
           <Link href={createRoute}>
             <ButtonPrimary
+            onClick={handleCreate}
               size="sm"
               variant="secondary"
               className="text-nowrap bg-emerald-700/50 flex items-center gap-2">

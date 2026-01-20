@@ -5,12 +5,12 @@ import z from "zod";
 
 export const createModuleSchema = z.object({
     title: z.string()
-        .min(4, "Title must be at least 4 characters")
+        .min(2, "Title must be at least 4 characters")
         .max(30, "Title must not exceed 200 characters")
         .trim(),
 
     description : z.string()
-        .max(2000, "Description must not exceed 2000 characters")
+        .max(500, "Description must not exceed 500 characters")
         .trim()
         .optional(),
 

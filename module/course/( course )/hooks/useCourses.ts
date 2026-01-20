@@ -120,7 +120,7 @@ export function useCreateCourse(){
             }
         },
         onError: (error) => {
-            toast.error(error.message || "Something went wrong while deleting")
+            toast.error(error.message || "Something went wrong while creating")
         }
     })
 }

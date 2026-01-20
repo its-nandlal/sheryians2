@@ -10,7 +10,8 @@ import { toast } from "sonner";
 export interface PaginationParams {
     page:       number;
     limit:      number;
-    search?:    string
+    search?:    string;
+    courseId?:  string;
 }
 
 
