@@ -8,8 +8,11 @@ import { CreateModuleInput, createModuleSchema } from "../../schemas"
 import { TextField } from "@/module/course/( course )/components/form/text-field"
 import { SelectField } from "@/module/course/( course )/components/form/select-field"
 
-import { ModuleType } from "@prisma/client"
+import { Module, ModuleType } from "@prisma/client"
 import ButtonPrimary from "@/components/ui/button-primary"
+import { use2IdStore, useDialogActionStore, useFormDataStore, useFormTypeStore, useIdStore } from "@/store"
+import { useModuleCreate, useModuleUpdate } from "../../hooks/useModules"
+import { toast } from "sonner"
 
 const MODULE_TYPE = [
   { label: "Video", value: ModuleType.VIDEO },
@@ -19,29 +22,72 @@ const MODULE_TYPE = [
   { label: "Project", value: ModuleType.PROJECT },
 ]
 
+
 export default function CreateModuleForm() {
-  const ModuleFormType = "create"
-  const CourseId = "cani12311snIididooojID_JId02ad_Ddd"
+  const {type} = useFormTypeStore()
+  const {id: CourseId} = useIdStore()
+  const {id: ModuleId} = use2IdStore()
+
+  const createModule = useModuleCreate()
+  const updateModule = useModuleUpdate(ModuleId)
+
+  const { mutate, } = type === "create" ? createModule : updateModule 
+
+  const {setOpen} = useDialogActionStore()
+  const {data: defaultData} = useFormDataStore()
+
+  const formDefaultData: Module = defaultData
 
   const form = useForm<CreateModuleInput>({
     resolver: zodResolver(createModuleSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      order: 1,
-      type: "VIDEO",
-      duration: "",
-      courseId: CourseId, // ✅ correct
+      title: formDefaultData.title || "",
+      description: formDefaultData.description || "",
+      order: formDefaultData.order || 1,
+      type: formDefaultData.type || "VIDEO",
+      duration: formDefaultData.duration || "",
+      courseId: formDefaultData.courseId || CourseId
     },
   })
+
+
+  const onSubmit = (data: CreateModuleInput) => {
+  try {
+    const formData = new FormData()
+
+    // ✅ Fix 1: Safe FormData population
+    Object.entries(data).forEach(([key, value]) => {
+      if (value === undefined || value === null || value === "") return
+      formData.append(key, value as string)
+    })
+
+    // ✅ Fix 2: Single mutation logic
+    const options = type === "create" ? {
+      onSuccess: () => {
+        form.reset()
+        // Optionally close dialog or invalidate queries
+      }
+    } : {}
+
+    // ✅ Fix 3: Await mutate (async)
+    mutate(formData, options)
+    console.log(formData)
+
+  } catch (error) {
+    console.error("Module submit error:", error)
+    toast.error(error instanceof Error ? error.message : "Something went wrong")
+  } finally {
+    // ✅ Fix 4: Move setOpen to correct place
+    setOpen(false)
+  }
+  }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => {
-          console.log("MODULE DATA 👉", data)
-        })}
-        className="space-y-6 font-[Helvetica] tracking-wide "
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 font-[Helvetica] tracking-wide 
+        "
       >
         <TextField
           form={form}
@@ -83,18 +129,22 @@ export default function CreateModuleForm() {
           form={form}
           name="courseId"
           label="Course ID"
-          value={CourseId}
           required
         />
 
 
         <div className="flex gap-3">
-          <ButtonPrimary size="sm" variant="destructive" type="button">
+          <ButtonPrimary 
+          onClick={() => setOpen(false)}
+          size="sm" 
+          variant="destructive" 
+          type="button">
             Cancel
           </ButtonPrimary>
 
           <ButtonPrimary size="sm" variant="secondary" type="submit">
-            {ModuleFormType === "create" && "Create Module"}
+            {type === "create" && "Create Module"}
+            {type === "edit" && "Update Module"}
           </ButtonPrimary>
         </div>
       </form>

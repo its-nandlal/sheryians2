@@ -94,17 +94,17 @@ export const createCourseSchema = z.object({
 
 export const createModuleSchema = z.object({
     title: z.string()
-        .min(4, "Title must be at least 4 characters")
-        .max(200, "Title must not exceed 200 characters")
+        .min(3, "Title must be at least 4 characters")
+        .max(50, "Title must not exceed 200 characters")
         .trim(),
     
     description: z.string()
         .min(10, "Description must be at least 10 characters")
-        .max(2000, "Description must not exceed 2000 characters")
+        .max(500, "Description must not exceed 2000 characters")
         .trim()
         .optional(),
     
-    order: z.number()
+    order: z.coerce.number()
         .int("Order must be an integer")
         .positive("Order must be positive")
         .min(1, "Order must be at least 1"),

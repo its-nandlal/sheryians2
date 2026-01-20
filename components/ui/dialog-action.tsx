@@ -1,6 +1,5 @@
-"use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import {
   Dialog,
   DialogContent,
@@ -9,57 +8,55 @@ import {
   DialogTitle,
 } from "./dialog"
 import { useRouter } from "next/navigation"
+import { useDialogActionStore, useIdStore } from "@/store"
 
 interface DialogActionProps {
-  defaultOpen?: boolean
   redirecting?: boolean
   redirectingPath?: string
   title?: string
   description?: string
-  children?: React.ReactNode
+  children: React.ReactNode // ✅ Required
 }
 
 export default function DialogAction({
-  defaultOpen = true,
   redirecting = false,
   redirectingPath = "/",
   title = "Create Module",
   description = "Manage module information.",
   children,
 }: DialogActionProps) {
-  const [open, setOpen] = useState(defaultOpen)
+  const { open, setOpen } = useDialogActionStore()
+  const { id: courseId } = useIdStore()
   const router = useRouter()
 
+
+  // ✅ Auto redirect on close if needed
   useEffect(() => {
-    if (!open && redirecting) {
-      router.push(redirectingPath)
+    if (!open && redirecting && courseId) {
+      router.push(`${redirectingPath}/${courseId}`)
     }
-  }, [open, redirecting, redirectingPath, router])
+  }, [open, redirecting, redirectingPath, courseId, router])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent
-        className="
-          p-5 bg-transparent
-          bg-linear-to-br from-emerald-950/90 via-emerald-900/90 to-emerald-950/90
-          backdrop-blur-xl
-          border border-emerald-800/40
-          outline outline-emerald-700/30
-          rounded-2xl
-          shadow-2xl shadow-black/40
-        "
-      >
-        <DialogHeader className="space-y-1.5">
-          <DialogTitle className="text-2xl font-[NeueMachina] text-emerald-50">
+      <DialogContent className="
+        max-w-md p-6 py-10 bg-transparent
+        bg-linear-to-tr from-emerald-900/70 via-emerald-950/70 to-emerald-600/70
+        backdrop-blur-xl
+        border border-emerald-800 outline outline-emerald-700
+        
+        rounded-2xl
+      ">
+        <DialogHeader className="space-y-2 mb-6 font-[NeueMachina]">
+          <DialogTitle className="text-3xl font-bold text-emerald-50 tracking-tight leading-1">
             {title}
           </DialogTitle>
-
-          <DialogDescription className="text-emerald-200/70">
+          <DialogDescription className="text-sm text-emerald-200/80 leading-relaxed">
             {description}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="pt-3">
+        <div className="space-y-4">
           {children}
         </div>
       </DialogContent>

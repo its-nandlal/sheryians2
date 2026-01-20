@@ -17,7 +17,6 @@ interface TextFieldProps<T extends FieldValues> {
   name: Path<T>;                 // ✅ strongly typed field path
   label: string;
   placeholder?: string;
-  value?: string | number;
   required?: boolean;
   type?: string;
   textarea?: boolean;
@@ -33,7 +32,6 @@ export function TextField<T extends FieldValues>({
   name,
   label,
   placeholder,
-  value,
   required = false,
   type = "text",
   textarea = false,
@@ -109,7 +107,6 @@ export function TextField<T extends FieldValues>({
                     type={type}
                     maxLength={maxLength}
                     placeholder={placeholder}
-                    value={value}
                     className={cn(
                       "bg-emerald-950/30 border-emerald-600/30 text-emerald-50 placeholder:text-emerald-50/40",
                       Icon && "pl-9",

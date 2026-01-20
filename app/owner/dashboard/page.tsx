@@ -1,5 +1,16 @@
+"use client"
 
-export default function page() {
+import { useFormTypeStore } from "@/store"
+import { useEffect } from "react"
+
+export default function Dashbord() {
+
+  const {setType} = useFormTypeStore()
+
+  useEffect(()=>{
+    setType("edit")
+  }, [setType])
+
   return (
     <div className='w-full h-screen'>
 

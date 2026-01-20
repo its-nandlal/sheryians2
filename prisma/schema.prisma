@@ -199,12 +199,12 @@ model Chapter {
   id          String   @id @default(cuid())
   title       String
   description String?
-  order       Int
+  // order       Int
 
   videoUrl    String?
   videoFileId String?
   duration    String?
-  isFree      Boolean  @default(false)
+  // isFree      Boolean  @default(false)
 
   moduleId String
   module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
