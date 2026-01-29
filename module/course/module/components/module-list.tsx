@@ -16,9 +16,8 @@ export default function ModuleList() {
   const [count, setCount] = useState(8);
 
   const page = usePaginationStore((state) => state.page);
-  const search = usePaginationStore((state) => state.search);
+  const search = usePaginationStore((state) => state.search)
   const { id: courseId } = useIdStore();
-  const {id: moduleId} = use2IdStore()
   const { setType } = useFormTypeStore();
   const {setOpen } = useDialogActionStore()
   const {setId} = use2IdStore()
@@ -32,7 +31,7 @@ export default function ModuleList() {
     page,
     search,
     limit: count,
-    courseId: courseId,
+    id: courseId,
   });
 
   const deleteMutate = useModuleDelete()
@@ -45,6 +44,7 @@ export default function ModuleList() {
     }),
     [data?.totalPages, data?.total, page],
   );
+
 
   useEffect(() => {
     const updateCount = () => {
@@ -82,9 +82,9 @@ export default function ModuleList() {
 const handleEdite = (id: string, data: Module) => {
   setType("edit")
   setOpen(true)
-  router.push(`/owner/courses/modules/${courseId}/action`)
   setId(id)
   setData(data)
+  router.push(`/owner/courses/modules/${courseId}/action`)
 }
 
 
@@ -95,7 +95,7 @@ const handleRediract = (moduleId: string) => {
 
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full">
       {isPending ? (
         <IsLoadingSkilaton />
       ) : isError ? (

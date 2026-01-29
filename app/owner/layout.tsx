@@ -17,8 +17,10 @@ export const metadata: Metadata = {
 
 export default function OwnerLayout({
   children,
+  profile
 }: Readonly<{
   children: React.ReactNode;
+  profile: React.ReactNode;
 }>) {
   return (
     <div className="w-full max-h-screen h-full flex bg-linear-to-tr from-black to-[#0a372a] text-white">
@@ -32,6 +34,7 @@ export default function OwnerLayout({
         id="main-content"
       >
         {children}
+        {profile}
       </main>
     </div>
   );

@@ -259,25 +259,37 @@ model InstructorCourse {
 }
 
 
-// Track ImageKit uploads
-model MediaFile {
-  id           String   @id @default(cuid())
-  fileId       String   @unique // ImageKit file ID
-  fileName     String
-  fileType     String   // image, video, document
-  url          String
-  thumbnailUrl String?
-  size         Int      // in bytes
-  width        Int?
-  height       Int?
-  entityType   String   // instructor, course, module
-  entityId     String?  // Related entity ID
-  uploadedBy   String?  // User ID who uploaded
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+model coupon {
+  id              String   @id @default(cuid())
+  code            String   @unique
 
-  @@index([entityType, entityId])
-  @@index([uploadedBy])
-  @@map("media_file")
+  discountValue   Float
+
+  minOrderAmount  Float    // minimum cart value
+  // maxDiscount     Float?    // cap for percentage discount
+
+  usageLimit      Int
+  usedCount       Int?       @default(0)
+
+  perUserLimit    Int
+
+  startsAt        DateTime
+  expiresAt       DateTime
+
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+}
+
+
+model expairCoupon {
+  id        String   @id @default(cuid())
+  orderId   String
+  couponId String
+  studentId   String
+
+  createdAt DateTime @default(now())
+
+  @@unique([orderId, couponId])
 }

@@ -6,7 +6,6 @@ import { useIdStore } from "@/store";
 import { use, useEffect } from "react";
 
 export default function Modules({params}: {params: Promise<{id: string}>}) {
-
   const {id} = use(params)
   const {setId} = useIdStore()
   useEffect(()=>{

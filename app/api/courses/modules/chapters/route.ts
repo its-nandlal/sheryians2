@@ -73,46 +73,70 @@ export async function GET(req:NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ApiResponse>> {
   try {
+    const auth = await checkAuthOwner();
+    if (!auth.success) {
+      return NextResponse.json(
+        { success: false, error: auth.error },
+        { status: +auth.status || 401 }
+      );
+    }
 
-    const auth = await checkAuthOwner()
-    if(!auth.success) return NextResponse.json({
-      success: auth.success,
-      error: auth.error
-    }, { status: +auth.status || 401 })
+    const formData = await req.formData();
 
-    const formData = await req.formData()
-    const rowData = Object.fromEntries(formData.entries())
-    
-    const validResult = createChaptersSchema.safeParse(rowData)
-    if(!validResult.success) return NextResponse.json({
-      success: false,
-      error: validResult.error.message
-    }, { status: 401 })
+    // ✅ Extract & remove video from validation data
+    const videoFile = formData.get("video") as File | null;
+    formData.delete("video");
 
-    const data = validResult.data
-    
+    const rowData = Object.fromEntries(formData.entries());
 
-    const videoFile = formData.get("video") as File | null
-    const uploadMediaFields: {url: string, fileId: string} = {url: "", fileId: ""}
-    if(videoFile){
-      const buffer = Buffer.from(await videoFile.arrayBuffer())
+    const validResult = createChaptersSchema.safeParse(rowData);
+    if (!validResult.success) {
+      return NextResponse.json(
+        { success: false, error: validResult.error.message },
+        { status: 400 }
+      );
+    }
+
+    const data = validResult.data;
+
+    let uploadMediaFields = {
+      url: "",
+      fileId: ""
+    };
+
+    // ✅ Video validation
+    if (videoFile) {
+      if (!videoFile.type.startsWith("video/")) {
+        return NextResponse.json(
+          { success: false, error: "Invalid video format" },
+          { status: 400 }
+        );
+      }
+
+      const buffer = Buffer.from(await videoFile.arrayBuffer());
 
       const res = await imagekit.upload({
         file: buffer,
-        fileName: validResult.data.title.slice(0,16),
+        fileName: `${data.title.slice(0, 16)}-${Date.now()}`,
         folder: "/modules/chapters",
         useUniqueFileName: true
-      })
+      });
 
-      if(!res) return NextResponse.json({
-        success: false,
-        error: "Server error for imagekit"
-      })
+      if (!res) {
+        return NextResponse.json(
+          { success: false, error: "ImageKit upload failed" },
+          { status: 500 }
+        );
+      }
 
-      uploadMediaFields.url = res.url
-      uploadMediaFields.fileId = res.fileId
+      uploadMediaFields = {
+        url: res.url,
+        fileId: res.fileId
+      };
     }
 
     const chapter = await prisma.chapter.create({
@@ -121,23 +145,26 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
         videoUrl: uploadMediaFields.url,
         videoFileId: uploadMediaFields.fileId
       }
-    })
+    });
 
-    if(!chapter) return NextResponse.json({
-      success: false,
-      error: "Chapter not create ( server api error )"
-    }, {status: 500})
-
-    return NextResponse.json({
-      success: true,
-      message: `${chapter.title.slice(0, 16)} Created Successfully`
-    }, {status: 201})
-
+    return NextResponse.json(
+      {
+        success: true,
+        message: `${chapter.title.slice(0, 16)} Created Successfully`
+      },
+      { status: 201 }
+    );
 
   } catch (error) {
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : "Server error from chapters api"
-    })
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Server error from chapters api"
+      },
+      { status: 500 }
+    );
   }
 }

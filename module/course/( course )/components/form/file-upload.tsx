@@ -1,4 +1,5 @@
-import { useCallback } from "react" // 👈 Removed useEffect
+"use client"
+import { useCallback, useMemo } from "react" // 👈 Removed useEffect
 import { Input } from "@/components/ui/input"
 import { CloudUpload, X } from "lucide-react"
 import Image from "next/image"
@@ -7,14 +8,21 @@ import { useCoursesStore } from "../../store/courses-store"
 interface FileUploadProps {
   name: string
   label: string
+  preview?: string
 }
 
-export function FileUpload({ name, label }: FileUploadProps) {
+export function FileUpload({ name, label, preview }: FileUploadProps) {
   const selectedFile = useCoursesStore((state) => state.selectedFiles[name])
   const addFile = useCoursesStore((state) => state.addFile)
   const removeFile = useCoursesStore((state) => state.removeFile)
-  
-  const preview = selectedFile?.preview || null // 👈 Derived value
+
+  const fiePreview = useMemo(() => {
+    if (selectedFile?.preview !== undefined) {
+      return selectedFile.preview || null;
+    }
+    return preview || null;
+  }, [selectedFile, preview]);
+
 
   const handleFileSelect = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,10 +63,10 @@ export function FileUpload({ name, label }: FileUploadProps) {
         />
 
         <div className="absolute inset-0 pointer-events-none">
-          {preview ? (
+          {fiePreview ? (
             <div className="relative w-full h-full">
               <Image
-                src={preview}
+                src={fiePreview}
                 alt={`${label} preview`}
                 fill
                 className="object-cover"

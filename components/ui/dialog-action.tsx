@@ -33,7 +33,7 @@ export default function DialogAction({
   // ✅ Auto redirect on close if needed
   useEffect(() => {
     if (!open && redirecting && courseId) {
-      router.push(`${redirectingPath}/${courseId}`)
+      router.push(`${redirectingPath}`)
     }
   }, [open, redirecting, redirectingPath, courseId, router])
 

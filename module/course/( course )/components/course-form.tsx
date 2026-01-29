@@ -221,6 +221,7 @@ const submit = (data: CreateCourseInput) => {
                   <FileUpload
                     name="thumbnail"
                     label="Thumbnail"
+                    preview={defaultValues && defaultValues.thumbnailUrl || ""}
                   />
                   <FileUpload name="banner" label="Banner" />
                 </div>
