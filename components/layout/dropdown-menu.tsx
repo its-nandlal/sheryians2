@@ -9,10 +9,10 @@ import AlertMessage from "./alert-dialog"
 
 interface DropdownMenuActionProps {
   children: React.ReactNode,
-  viewText: string
+  viewText?: string
   actionText: string,
   title:string,
-  viewAction: () => void,
+  viewAction?: () => void,
   copyIdAction?: () => void,
   editAction?: () => void,
   deleteAction?: () => void,
@@ -37,7 +37,8 @@ export default function DropdownMenuAction({ children, viewText, actionText, tit
           space-y-1
         "
       >
-        {/* Copy ID */}
+        {/* View ID */}
+        {viewText && viewAction && (
         <Button
           type="button"
           onClick={viewAction}
@@ -45,6 +46,7 @@ export default function DropdownMenuAction({ children, viewText, actionText, tit
           {viewText}
           <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
         </Button>
+        )}
 
 
         {/* Copy ID */}

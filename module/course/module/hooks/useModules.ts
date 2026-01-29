@@ -30,7 +30,7 @@ export type getModuleResponse = getModulesProps | ApiError
 
 // get api
 async function fetchModules(
-    {page, limit, search, courseId}: PaginationParams
+    {page, limit, search, id: courseId}: PaginationParams
 ): Promise<getModulesProps> {
     const { data } = await api.get("/courses/modules", 
     {params: {page, limit, search, courseId} })
@@ -65,10 +65,10 @@ async function fetchModuleDelete(id: string) {
 // ====================== Qureys CREATE =======================
 
 // get modules
-export const useModules = ({page, limit, search, courseId}: PaginationParams) => {
+export const useModules = ({page, limit, search, id: courseId}: PaginationParams) => {
     return useQuery({
         queryKey: ["modules", {page, limit, search, courseId}],
-        queryFn: () => fetchModules({page, limit, search, courseId}),
+        queryFn: () => fetchModules({page, limit, search, id: courseId}),
         staleTime: 5 * 60 * 1000,
     })
 }

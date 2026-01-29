@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { checkAuth, checkAuthOwner } from "@/module/auth/actions";
 import { createCourseSchema } from "@/module/course/( course )/schema";
 import { ApiResponse } from "@/types";
-import { CourseDays, CourseDuration, CourseLevel, CourseStatus, CourseType, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -32,11 +32,6 @@ export async function GET(request:NextRequest) {
     if(search.trim()){
       where.OR = [
         {title: {contains: search, mode: "insensitive"}},
-        {level: search as CourseLevel },
-        {duration: search as CourseDuration},
-        {days: search as CourseDays},
-        {status: search as CourseStatus},
-        {type: search as CourseType},
         {price: {equals: Number(search)}},
         {discountedPrice: {equals: Number(search)}}
       ]
@@ -150,7 +145,7 @@ export async function POST(request:NextRequest):  Promise<NextResponse<ApiRespon
     return NextResponse.json({
       success: true,
       message: `${data.title.slice(0,16)} created successfully`,
-    },{ status: 200 })
+    },{ status: 201 })
 
   } catch (error) {
     return NextResponse.json({

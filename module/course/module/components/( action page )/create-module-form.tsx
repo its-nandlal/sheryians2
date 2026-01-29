@@ -41,12 +41,12 @@ export default function CreateModuleForm() {
   const form = useForm<CreateModuleInput>({
     resolver: zodResolver(createModuleSchema),
     defaultValues: {
-      title: formDefaultData.title || "",
-      description: formDefaultData.description || "",
-      order: formDefaultData.order || 1,
-      type: formDefaultData.type || "VIDEO",
-      duration: formDefaultData.duration || "",
-      courseId: formDefaultData.courseId || CourseId
+      title: formDefaultData?.title ?? "",
+      description: formDefaultData?.description ?? "",
+      order: formDefaultData?.order ?? 1,
+      type: formDefaultData?.type ?? "VIDEO",
+      duration: formDefaultData?.duration ?? "",
+      courseId: formDefaultData?.courseId ?? CourseId
     },
   })
 
@@ -55,29 +55,22 @@ export default function CreateModuleForm() {
   try {
     const formData = new FormData()
 
-    // ✅ Fix 1: Safe FormData population
     Object.entries(data).forEach(([key, value]) => {
       if (value === undefined || value === null || value === "") return
       formData.append(key, value as string)
     })
 
-    // ✅ Fix 2: Single mutation logic
     const options = type === "create" ? {
       onSuccess: () => {
         form.reset()
-        // Optionally close dialog or invalidate queries
       }
     } : {}
 
-    // ✅ Fix 3: Await mutate (async)
     mutate(formData, options)
-    console.log(formData)
 
   } catch (error) {
-    console.error("Module submit error:", error)
     toast.error(error instanceof Error ? error.message : "Something went wrong")
   } finally {
-    // ✅ Fix 4: Move setOpen to correct place
     setOpen(false)
   }
   }

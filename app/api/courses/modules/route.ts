@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const page = Number(searchParams.get("page")) || 1
     const limit = Math.min(Number(searchParams.get("limit")) || 10, 100) // ✅ Max 100
-    const search = searchParams.get("search")?.trim() || ""
+    const search = searchParams.get("search") || ""
     const courseId = searchParams.get("courseId")
 
     if (page < 1 || limit < 1) {
@@ -41,7 +41,6 @@ export async function GET(request: NextRequest) {
       where.OR = [
         { title: { contains: search, mode: "insensitive" } },
         { order: { equals: Number(search) } },
-        { type: search as ModuleType }, // Prisma enum
       ]
     }
 
