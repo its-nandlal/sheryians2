@@ -15,9 +15,6 @@ interface CouponsActionFormProps {
     setOpen: (value: boolean) => void;
 }
 
-const formatDate = (date: Date) =>
-  (new Date(date).toISOString().split("T")[0]).toString()
-
 
 export default function CouponsActionForm({ couponsId, defaultData, formType, setOpen }: CouponsActionFormProps) {
 
@@ -49,8 +46,8 @@ useEffect(() => {
       minOrderAmount: defaultData.minOrderAmount,
       usageLimit: defaultData.usageLimit,
       perUserLimit: defaultData.perUserLimit,
-      startsAt: formatDate(defaultData.startsAt),
-      expiresAt: formatDate(defaultData.expiresAt),
+      startsAt: defaultData.startsAt,
+      expiresAt: defaultData.expiresAt,
       isActive: defaultData.isActive,
     });
   }

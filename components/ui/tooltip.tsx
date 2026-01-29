@@ -53,7 +53,7 @@ export default function ToolTip({
           border border-[#00ffb3]/5 
           shadow-inner shadow-[#00ffb3]/15
           text-shadow-2xs text-shadow-zinc-900
-          font-[NeueMachina] font-semibold text-sm tracking-wider
+          font-[NeueMachina]! font-semibold text-sm tracking-wider
           opacity-0 scale-75 pointer-events-none whitespace-nowrap
           group-hover:opacity-100 
           transition-all duration-200 ease-out
