@@ -27,7 +27,7 @@ export default function OwnerLayout({
       {/* <aside aria-label="Owner Navigation" className="max-w-20 w-full"> */}
         <SideNav />
       {/* </aside> */}
-      
+      ¸
       <main 
         className="relative z-1 w-full h-full"
         role="main"
