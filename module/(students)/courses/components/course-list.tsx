@@ -1,7 +1,7 @@
 "use client"
 
 import { usePaginationStore } from "@/store/use-pagination-store"
-import { useMemo } from "react"
+import { useMemo, useEffect, useState } from "react"
 import { IsLoadingSkilaton } from "@/module/instructor/components/InstructorsList"
 import { Message } from "@/components/layout/message-box"
 import Pagination from "@/components/ui/pagination"
@@ -10,22 +10,29 @@ import CourseCard from "./course-card"
 import MobileCourseCard from "./mobile-course-card"
 
 export default function CoursesList() {
-  /* ---------------- Store ---------------- */
   const page = usePaginationStore((state) => state.page)
   const search = usePaginationStore((state) => state.search)
 
-  /* ---------------- Responsive ---------------- */
-  const isDesktop = window.innerWidth > 768
+  const [isDesktop, setIsDesktop] = useState(false)
 
+  useEffect(() => {
+    // ✅ Safe - client-side only
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth > 768)
+    }
 
-  /* ---------------- API ---------------- */
+    checkScreenSize() // Initial check
+
+    window.addEventListener('resize', checkScreenSize)
+    return () => window.removeEventListener('resize', checkScreenSize)
+  }, [])
+
   const { data, isPending, isError, refetch } = useCourses({
     page,
     search,
     limit: 9,
   })
 
-  /* ---------------- Pagination ---------------- */
   const paginationData = useMemo(
     () => ({
       pages: data?.totalPages ?? 0,
@@ -36,11 +43,10 @@ export default function CoursesList() {
   )
 
   return (
-    <div className="w-full h-full bg-emerald-700/40 p-2 md:p-4 flex flex-col-reverse md:flex-col justify-between gap-4 rounded-md overflow-hidden pb-28 md:pb-16 ">
-
-      {/* ---------------- Grid ---------------- */}
+    <div className="w-full h-full bg-emerald-700/40 p-2 md:p-4 flex flex-col-reverse md:flex-col justify-between gap-4 rounded-md overflow-hidden pb-28 md:pb-16">
+      
       <div className="relative w-full grid md:grid-cols-3 md:grid-rows-3 gap-4 overflow-y-auto">
-
+        
         {/* Loading */}
         {isPending && <IsLoadingSkilaton />}
 
@@ -64,7 +70,6 @@ export default function CoursesList() {
         )}
       </div>
 
-      {/* ---------------- Pagination ---------------- */}
       {paginationData.pages > 1 && (
         <Pagination
           pages={paginationData.pages}
