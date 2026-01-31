@@ -47,7 +47,7 @@ export default function ToolTip({
         role="tooltip"
         style={{ transitionDelay: `${delay}ms` }}
         className={`
-          absolute z-99 ${positionClasses[position]}
+          absolute z-999 ${positionClasses[position]}
           px-4 py-1.5 rounded-full
           bg-[#007c57]/80 backdrop-blur-md
           border border-[#00ffb3]/5 
