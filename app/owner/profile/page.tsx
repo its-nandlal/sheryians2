@@ -8,7 +8,7 @@ export default function Profile() {
 
   useEffect(() => {
     router.back()
-  }, [])
+  }, [router])
 
   return null;
 }
