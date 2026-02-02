@@ -40,7 +40,7 @@ export default function Header() {
       </div>
 
 
-      <div className='md:w-1/2 flex items-center justify-between'>
+      <div className='2xl:w-1/2 flex items-center justify-between'>
         {/* Navigation */}
         <nav className='font-[NeueMachina] text-sm tracking-wide flex items-center gap-8 max-md:hidden'>
           {navLinks.map((link) => (
@@ -58,7 +58,7 @@ export default function Header() {
         <div className='flex items-center gap-4'>
           <hr className='w-44 border-[#00ffbf]/15 max-md:hidden' />
 
-          <ButtonPrimary size="sm" variant="outline" className='flex items-center gap-2 max-md:hidden'>
+          <ButtonPrimary size="sm" variant="outline" className='flex items-center gap-2 text-nowrap max-md:hidden'>
             <PhoneCall className='w-5 h-5' /> Callback Request
           </ButtonPrimary>
 
@@ -66,7 +66,7 @@ export default function Header() {
             <ButtonPrimary 
               onClick={() => setIsAuthActive(!isAuthActive)} 
               size="sm" 
-              className='font-semibold relative z-2'
+              className='font-semibold relative z-2 text-nowrap'
             >
               Get Started
             </ButtonPrimary>
