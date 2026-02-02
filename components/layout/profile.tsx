@@ -9,7 +9,7 @@ import {
   Calendar,
 } from "lucide-react"
 
-export default async function Profile() {
+export default async function Page() {
   const user = await getCurrentUser()
 
   if (!user.success) {

@@ -1,8 +1,14 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function Page() {
   const route = useRouter()
-  return route.back()
+
+  useEffect(() => {
+    route.back()
+  }, [route])
+
+  return null
 }
