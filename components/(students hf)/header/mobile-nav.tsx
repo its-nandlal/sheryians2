@@ -1,12 +1,12 @@
 import NavButton from "@/components/layout/nav-button";
-import { BookText, Box, LayoutDashboard, LucideIcon, Settings } from "lucide-react";
+import { BookText, Box, LayoutDashboard, LucideIcon, UserRound } from "lucide-react";
 
 export default function MobileNavItems() {
   const mobileNavItems: { icon: LucideIcon; label: string; href: string }[] = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
     { icon: Box, label: "Courses", href: "/dashboard/courses" },
     { icon: BookText, label: "Classroom", href: "/dashboard/classroom" },
-    { icon: Settings, label: "Settings", href: "/dashboard/settings" },
+    { icon: UserRound, label: "Profile", href: "/dashboard/profile" },
   ];
 
   return (

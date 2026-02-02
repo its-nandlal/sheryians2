@@ -107,7 +107,6 @@ export async function DELETE(
     }, { status: +auth.status || 401 })
 
     const {id} = await params;
-    console.log(id);
 
 
     const existingCoupon = await prisma.coupon.findUnique({

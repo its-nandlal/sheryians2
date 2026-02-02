@@ -170,7 +170,6 @@ const submit = (data: CreateCourseInput) => {
     // 👇 Object.values से files extract करें
     Object.values(selectedFiles).forEach(({ name, file }) => {
       formData.append(name, file as File)
-      console.log(`Uploading ${name}:`, file?.name)
     })
 
     if(mode === "create") {

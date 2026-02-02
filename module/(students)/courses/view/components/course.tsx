@@ -3,17 +3,101 @@
 import ProductCard from "@/components/layout/product-card";
 import { useCourse } from "../../hooks";
 import { durationMap, levelConfig } from "../../components/course-card";
-import { Calendar, Clock, Star } from "lucide-react";
+import { Calendar, Clock, Loader2, Star } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import ButtonPrimary from "@/components/ui/button-primary";
+import { toast } from "sonner";
+import { api } from "@/lib/axios";
+import type { AxiosError } from "axios";
+
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
+interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  handler: (response: RazorpayResponse) => void;
+  prefill: {
+    name: string;
+    email: string;
+  };
+  theme: {
+    color: string;
+  };
+}
+
+interface RazorpayInstance {
+  open: () => void;
+}
+
+declare global {
+  interface Window {
+    Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
+  }
+}
 
 export default function Course({id}:{id: string}) {
 
   const {data, isPending} = useCourse(id)
 
-  if(isPending){
-    return <div>Loading...</div>
-  }
+  const handleBuyNow = async () => {
+    try {
+      const response = await api.post(`/courses/${id}/buy`);
+      const { data: orderData } = response.data;
+
+      const options = {
+        key: orderData.key,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Sheryians Coding School",
+        description: `Purchase ${data?.data?.title}`,
+        order_id: orderData.razorpayOrderId,
+        handler: async function (response: RazorpayResponse) {
+          try {
+            const verifyResponse = await api.post(`/orders/${orderData.orderId}/verify`, {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+            toast.success("Payment successful! You are now enrolled.");
+            // Optionally redirect or refresh
+          } catch (error) {
+            console.error('Verify error:', error);
+            const message = error instanceof Error && 'response' in error 
+              ? (error as AxiosError<{ error: string }>).response?.data?.error 
+              : "Payment verification failed. Please contact support.";
+            toast.error(message);
+          }
+        },
+        prefill: {
+          name: orderData.customer?.name || "",
+          email: orderData.customer?.email || "",
+        },
+        theme: {
+          color: "#006f55",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      const message = error instanceof Error && 'response' in error 
+        ? (error as AxiosError<{ error: string }>).response?.data?.error 
+        : "Failed to initiate payment";
+      toast.error(message);
+    }
+  };
+
+    if(isPending) return <div className="w-full h-full flex items-center justify-center">
+        <Loader2 className="w-5 h-5 animate-spin" />
+    </div>
 
   if(!data?.data){
     return <div>No data found</div>
@@ -106,6 +190,7 @@ export default function Course({id}:{id: string}) {
 
         <div className=" flex items-center gap-2">
           <ButtonPrimary 
+          onClick={handleBuyNow}
           size={"sm"} 
           variant={"secondary"} 
           className="text-base md:text-lg text-nowrap font-[NeueMachina] px-6 md:px-14 max-md:py-3">

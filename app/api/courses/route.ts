@@ -107,7 +107,6 @@ export async function POST(request:NextRequest):  Promise<NextResponse<ApiRespon
     }, {status: 400})
 
     const data = validResult.data
-    // console.log(formData)
 
     // UPLOADING IMAGES
     const uploadFields: UploadField[] = [

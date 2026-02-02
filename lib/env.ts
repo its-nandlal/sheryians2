@@ -14,6 +14,9 @@ export const env = createEnv({
         IMAGEKIT_PRIVATE_KEY: z.string().min(1, "Imagekit Private Key is required"), // Fixed typo: MAGEKIT -> IMAGEKIT
         IMAGEKIT_URL_ENDPOINT: z.string().min(1, "Imagekit URL Endpoint is required"),
         IMAGEKIT_WEBHOOK_SECRET: z.string().min(1, "Imagekit Webhook Secret is required"),
+        RAZORPAY_KEY_ID: z.string().min(1, "Razorpay Key ID is required"),
+        RAZORPAY_KEY_SECRET: z.string().min(1, "Razorpay Key Secret is required"),
+        RAZORPAY_WEBHOOK_SECRET: z.string().min(1, "Razorpay Webhook Secret is required"),
     },
     client: {
         NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY: z.string().min(1, "Next Public Imagekit Public Key is required"),

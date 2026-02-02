@@ -69,7 +69,6 @@ export default function ChapterActionForm({moduleId, defaulrData, formType, setO
       })
 
       Object.values(selectedFile).forEach(({name, file}) => {
-        console.log("Appending file:", name, file);
         formData.append(name, file as File)
       })
 
