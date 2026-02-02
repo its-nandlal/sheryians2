@@ -81,6 +81,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   enrollments   Enrollment[]
+  order         Order[]
 
   @@unique([email])
   @@map("user")
@@ -166,7 +167,8 @@ model Course {
   modules      Module[]
   enrollments  Enrollment[]
   instructors  InstructorCourse[]
-  
+  order        Order[]
+   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -216,20 +218,20 @@ model Chapter {
 }
 
 
-model Enrollment {
-  id         String   @id @default(cuid())
-  enrolledAt DateTime @default(now())
-  progress   Float    @default(0) // 0-100%
-  completed  Boolean  @default(false)
+// model Enrollment {
+//   id         String   @id @default(cuid())
+//   enrolledAt DateTime @default(now())
+//   progress   Float    @default(0) // 0-100%
+//   completed  Boolean  @default(false)
   
-  userId   String
-  courseId String
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+//   userId   String
+//   courseId String
+//   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   
-  @@unique([userId, courseId])
-  @@map("enrollment")
-}
+//   @@unique([userId, courseId])
+//   @@map("enrollment")
+// }
 
 model Instructor {
   id        String   @id @default(cuid())
@@ -273,6 +275,8 @@ model coupon {
 
   perUserLimit    Int
 
+  order          Order[]
+
   startsAt        DateTime
   expiresAt       DateTime
 
@@ -292,4 +296,64 @@ model expairCoupon {
   createdAt DateTime @default(now())
 
   @@unique([orderId, couponId])
+}
+
+
+
+// Order Schema - Add this to your existing schema
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+model Order {
+  id               String       @id @default(cuid())
+  courseId         String
+  course           Course       @relation(fields: [courseId], references: [id])
+  userId           String
+  user             User         @relation(fields: [userId], references: [id])
+  amount           Float        // Final amount after discount
+  originalAmount   Float        // Course original price
+  discountAmount   Float?       // Discount applied
+  couponId         String?
+  coupon           coupon?      @relation(fields: [couponId], references: [id])
+  razorpayOrderId  String       @unique
+  razorpayPaymentId String? 
+  razorpaySignature String?
+  status           PaymentStatus @default(PENDING)
+  currency         String       @default("INR")
+  receipt          String       @unique
+  
+  // Customer details
+  customerName     String?
+  customerEmail    String?
+  
+  enrollment       Enrollment?  @relation("OrderEnrollment")
+  
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@map("orders")
+}
+
+// Enrollment relation update
+model Enrollment {
+  id         String   @id @default(cuid())
+  enrolledAt DateTime @default(now())
+  progress   Float    @default(0)
+  completed  Boolean  @default(false)
+
+  orderId    String?  @unique
+  order      Order?   @relation("OrderEnrollment", fields: [orderId], references: [id])
+  
+  userId     String
+  courseId   String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, courseId])
+  @@map("enrollment")
 }

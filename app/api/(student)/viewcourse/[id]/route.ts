@@ -20,7 +20,6 @@ export async function GET(request: NextRequest,
 
     // 📊 Extract course ID from query params
     const {id} = await params
-    console.log(id)
     
     if (!id) {
       return NextResponse.json(

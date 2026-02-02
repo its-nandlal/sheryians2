@@ -9,7 +9,7 @@ import { api } from "@/lib/axios";
 import { Course } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 
-interface coursesResponse {
+export interface coursesResponse {
     success: boolean;
     data: Course;
     error?: string;

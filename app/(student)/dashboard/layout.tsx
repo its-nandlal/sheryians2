@@ -2,8 +2,10 @@ import SideNav from "@/components/(students hf)/header/side-nav";
 
 export default function DashboardLayout({
   children,
+  profile
 }: {
   children: React.ReactNode;
+  profile: React.ReactNode;
 }) {
   return (
     <div className="h-screen w-full bg-linear-to-tr from-black to-[#0a372a] text-white">
@@ -21,6 +23,7 @@ export default function DashboardLayout({
           id="main-content"
         >
           {children}
+          {profile}
         </main>
       </div>
 
@@ -32,6 +35,7 @@ export default function DashboardLayout({
           id="main-content"
         >
           {children}
+          {profile}
         </main>
 
         {/* Bottom Nav */}

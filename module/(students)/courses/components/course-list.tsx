@@ -45,10 +45,6 @@ export default function CoursesList() {
   return (
     <div className="w-full h-full bg-emerald-700/40 p-2 md:p-4 flex flex-col-reverse md:flex-col justify-between gap-4 rounded-md overflow-hidden pb-28 md:pb-16">
       
-      <div className="relative w-full grid md:grid-cols-3 md:grid-rows-3 gap-4 overflow-y-auto">
-        
-        {/* Loading */}
-        {isPending && <IsLoadingSkilaton />}
 
         {/* Error */}
         {isError && (
@@ -59,6 +55,10 @@ export default function CoursesList() {
         {data?.success && data.data.length === 0 && (
           <Message message="Courses Not Found" />
         )}
+      <div className="relative w-full grid md:grid-cols-3 md:grid-rows-3 gap-4 overflow-y-auto">
+        
+        {/* Loading */}
+        {isPending && <IsLoadingSkilaton />}
 
         {/* Data */}
         {data?.data?.map((course: getCourse) =>

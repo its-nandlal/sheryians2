@@ -64,7 +64,7 @@ export function IsLoadingSkilaton () {
       {Array.from({ length: 9 }).map((_, index) => (
         <InstructorCard
           key={index}
-          className="from-emerald-950 via-[#002a1e] to-black animate-pulse duration-500 pointer-events-none"
+          className="w-full h-full from-emerald-950 via-[#002a1e] to-black animate-pulse duration-500 pointer-events-none"
         />
       ))}
     </>
