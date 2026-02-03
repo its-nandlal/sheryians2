@@ -6,7 +6,7 @@ import { env } from "./env";
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
-  trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: ["https://sheryians2.vercel.app"],
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
