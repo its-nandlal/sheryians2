@@ -1,9 +1,4 @@
-Perfect 👍
-यह रहा तुम्हारे repo के लिए **ready-to-copy `README.md`** (direct GitHub में paste करने के लिए):
 
----
-
-````markdown
 # 🚀 sheryians2
 
 A modern **full-stack web application** built with **Next.js 16 (App Router)**, **React 19**, and **TypeScript**.
