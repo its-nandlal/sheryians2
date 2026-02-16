@@ -1,32 +1,77 @@
+<!-- 🔥 Animated Header Banner -->
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:203A43,100:2C5364&height=200&section=header&text=sheryians2&fontSize=40&fontColor=ffffff&animation=fadeIn&fontAlignY=35" />
+</p>
 
-# 🚀 sheryians2
+<p align="center">
+  <b>🚀 Modern Full-Stack Web Application</b>
+</p>
 
-A modern **full-stack web application** built with **Next.js 16 (App Router)**, **React 19**, and **TypeScript**.
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js" />
+  <img src="https://img.shields.io/badge/React-19-blue?logo=react" />
+  <img src="https://img.shields.io/badge/TypeScript-5-blue?logo=typescript" />
+  <img src="https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql" />
+  <img src="https://img.shields.io/badge/TailwindCSS-v4-38B2AC?logo=tailwind-css" />
+</p>
 
-This project demonstrates scalable architecture using **Server Components**, **Server Actions**, **Prisma ORM**, authentication, payments, media uploads, charts, animations, and modern UI patterns.
-
----
-
-## ✨ Tech Stack
-
-- **Next.js 16.1.1** (App Router)
-- **React 19**
-- **TypeScript**
-- **Prisma ORM**
-- **PostgreSQL (pg)**
-- **Tailwind CSS v4**
-- **Radix UI**
-- **Better Auth**
-- **TanStack React Query**
-- **Zustand**
-- **ImageKit**
-- **Razorpay**
-- **Framer Motion**
-- **Recharts**
+<p align="center">
+  A modern <b>full-stack web application</b> built with <b>Next.js 16</b>, <b>React 19</b>, and <b>TypeScript</b>.
+</p>
 
 ---
 
-## 📦 Dependencies
+## ✨ Overview
+
+**sheryians2** is a production-style full-stack application showcasing:
+
+✅ Scalable architecture  
+✅ Server Components  
+✅ Server Actions  
+✅ Prisma ORM  
+✅ Authentication  
+✅ Payments  
+✅ Media Uploads  
+✅ Charts & Animations  
+
+Designed with performance, clean UI, and maintainability in mind.
+
+---
+
+## 🎥 Demo / Preview
+
+▶ **Project Walkthrough Video**  
+https://youtu.be/8TEq_Ga9Epw
+
+🔗 **GitHub Repository**  
+https://github.com/its-nandlal/sheryians2
+
+---
+
+## 🧰 Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| **Framework** | Next.js 16 (App Router) |
+| **UI Library** | React 19 |
+| **Language** | TypeScript |
+| **Database ORM** | Prisma |
+| **Database** | PostgreSQL |
+| **Styling** | Tailwind CSS v4 |
+| **UI Components** | Radix UI |
+| **Auth** | Better Auth |
+| **Server State** | TanStack React Query |
+| **State Management** | Zustand |
+| **Media Upload** | ImageKit |
+| **Payments** | Razorpay |
+| **Charts** | Recharts |
+| **Animations** | Framer Motion |
+| **Theme** | next-themes |
+
+---
+
+## 📦 Key Dependencies
 
 ### 🎨 UI & Styling
 - tailwindcss  
@@ -34,14 +79,14 @@ This project demonstrates scalable architecture using **Server Components**, **S
 - clsx  
 - class-variance-authority  
 
-### 🧩 UI Components (Radix)
-- @radix-ui/react-accordion  
-- @radix-ui/react-dialog  
-- @radix-ui/react-dropdown-menu  
-- @radix-ui/react-alert-dialog  
-- @radix-ui/react-select  
-- @radix-ui/react-label  
-- @radix-ui/react-slot  
+### 🧩 Radix UI Components
+- react-accordion  
+- react-dialog  
+- react-dropdown-menu  
+- react-alert-dialog  
+- react-select  
+- react-label  
+- react-slot  
 
 ### 🧠 Forms & Validation
 - react-hook-form  
@@ -76,7 +121,7 @@ This project demonstrates scalable architecture using **Server Components**, **S
 ### 🌗 Theme
 - next-themes  
 
-### ⚡ State Management
+### ⚡ State
 - zustand  
 
 ### 🔁 Server State / Caching
@@ -84,24 +129,24 @@ This project demonstrates scalable architecture using **Server Components**, **S
 
 ---
 
-## 🧭 Scripts
+## 🧭 Available Scripts
 
 ```bash
 npm run dev      # Start development server
-npm run build    # prisma generate + next build
+npm run build    # Prisma generate + Next.js build
 npm start        # Run production build
 npm run lint     # ESLint
 ````
 
-### ⚙ Special Build Logic
+### ⚙ Special Logic
 
-* `postinstall → prisma generate`
+`postinstall → prisma generate`
 
-Ensures Prisma client is auto-generated after install.
+✔ Automatically generates Prisma Client after install.
 
 ---
 
-## 🏗 Architecture Decisions
+## 🏗 Architecture Highlights
 
 ### ✅ Next.js App Router
 
@@ -115,13 +160,9 @@ Ensures Prisma client is auto-generated after install.
 
 ### ✅ Server Actions
 
-Used instead of traditional API routes.
-
-✔ Less boilerplate
+✔ Reduced API boilerplate
 ✔ Secure server execution
 ✔ Direct DB mutations
-
-Example:
 
 ```ts
 "use server"
@@ -136,16 +177,16 @@ export async function createItem(data) {
 ### ✅ Prisma + PostgreSQL
 
 ✔ Type-safe queries
-✔ Schema-based modeling
+✔ Schema-driven design
 ✔ Easy migrations
 
 ---
 
-### ✅ React Query Strategy
+### ✅ Data Fetching Strategy
 
 | Scenario       | Approach          |
 | -------------- | ----------------- |
-| Initial Data   | Server Components |
+| Initial Load   | Server Components |
 | Client Updates | React Query       |
 | Mutations      | Server Actions    |
 
@@ -153,11 +194,8 @@ export async function createItem(data) {
 
 ### ✅ Zustand
 
-Used for lightweight global UI state.
-
-✔ Modals
-✔ Cart / UI state
-✔ Filters
+✔ Lightweight global UI state
+✔ Ideal for modals, UI controls
 
 ---
 
@@ -185,14 +223,12 @@ Handled via:
 
 ## 📄 Pagination
 
-Efficient pagination using Prisma:
-
 ```ts
 skip: (page - 1) * limit
 take: limit
 ```
 
-✔ Optimized queries
+✔ Efficient queries
 ✔ Better performance
 
 ---
@@ -207,11 +243,9 @@ npx prisma generate
 npm run dev
 ```
 
-App runs on:
+🌐 App runs at:
 
-```
-http://localhost:3000
-```
+[http://localhost:3000](http://localhost:3000)
 
 ---
 
@@ -228,10 +262,7 @@ RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
 ```
 
-Validated using:
-
-✔ Zod
-✔ @t3-oss/env-nextjs
+✔ Validated using Zod + @t3-oss/env-nextjs
 
 ---
 
@@ -247,17 +278,15 @@ Validated using:
 ✅ Zustand State Management
 ✅ TanStack React Query
 ✅ Tailwind CSS v4
-✅ Radix UI Components
-✅ Charts (Recharts)
-✅ Animations (Framer Motion)
+✅ Radix UI
+✅ Recharts
+✅ Framer Motion
 
 ---
 
 ## 🚀 Deployment
 
-Recommended Platform:
-
-**Vercel**
+Recommended Platform: **Vercel**
 
 ```bash
 vercel deploy
@@ -267,7 +296,7 @@ vercel deploy
 
 ## 👨‍💻 Author
 
-**Nandlal Jangir**
+**Nick D Jangir**
 
 ---
 
@@ -280,4 +309,5 @@ If you like this project:
 🧠 Share feedback
 
 ---
+
 
